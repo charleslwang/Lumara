@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lumara</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3a0ca3;
+            --accent: #f72585;
+            --text: #e0e1dd;
+            --dark: #0b0c10;
+            --darker: #1a1b26;
+            --highlight: #64ffda;
+            --card-bg: rgba(30, 32, 46, 0.7);
+            --glow: 0 0 10px rgba(100, 255, 218, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background: var(--dark);
+            background-image:
+                radial-gradient(circle at 15% 50%, rgba(67, 97, 238, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 85% 30%, rgba(247, 37, 133, 0.05) 0%, transparent 40%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Futuristic grid lines */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 20px 20px;
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 60px 30px;
+            width: 100%;
+        }
+
+        header {
+            margin-bottom: 60px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
+            position: relative;
+        }
+
+        h1::after {
+            content: "";
+            position: absolute;
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            bottom: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+
+        .subtitle {
+            font-size: 1.25rem;
+            margin-bottom: 40px;
+            color: #a7a9be;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.7;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            margin: 40px 0 20px;
+            color: var(--highlight);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+
+        .features {
+            margin: 30px 0 50px;
+        }
+
+        .features ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .features li {
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            padding: 18px 24px;
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid rgba(100, 255, 218, 0.1);
+            box-shadow: var(--glow);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .features li:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(100, 255, 218, 0.15);
+            border-color: rgba(100, 255, 218, 0.3);
+        }
+
+        .features li i {
+            color: var(--highlight);
+            font-size: 1.5rem;
+            margin-right: 15px;
+            min-width: 24px;
+        }
+
+        .diagram {
+            margin: 60px 0;
+            padding: 40px 0;
+            text-align: center;
+            background-color: var(--darker);
+            border-radius: 15px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(100, 255, 218, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .diagram::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                radial-gradient(circle at 30% 20%, rgba(67, 97, 238, 0.05) 0%, transparent 30%),
+                radial-gradient(circle at 70% 80%, rgba(247, 37, 133, 0.05) 0%, transparent 30%);
+            z-index: 0;
+        }
+
+        .diagram svg {
+            max-width: 100%;
+            height: auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: auto;
+            padding: 30px 0;
+            color: #a7a9be;
+            width: 100%;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            background-color: rgba(26, 27, 38, 0.8);
+        }
+
+        .contact {
+            margin: 50px 0;
+            text-align: center;
+        }
+
+        .contact-button {
+            display: inline-block;
+            padding: 14px 34px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            color: white;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            box-shadow: 0 5px 15px rgba(247, 37, 133, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            letter-spacing: 0.5px;
+        }
+
+        .contact-button::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: all 0.5s ease;
+            z-index: -1;
+        }
+
+        .contact-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(247, 37, 133, 0.4);
+        }
+
+        .contact-button:hover::before {
+            left: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>LumaraAI</h1>
+            <p class="subtitle">An AI-powered career development network that creates optimal mentor-mentee relationships for ALL domains.</p>
+        </header>
+
+        <h2>How We Use AI:</h2>
+        <div class="features">
+            <ul>
+                <li>
+                    <i class="fas fa-brain"></i>
+                    Match mentors and mentees using AI analysis of communication styles, knowledge overlap, and career trajectories
+                </li>
+                <li>
+                    <i class="fas fa-route"></i>
+                    Provide personalized career path optimization based on skill development patterns and industry trends
+                </li>
+                <li>
+                    <i class="fas fa-chart-line"></i>
+                    Deliver data-driven insights for professional growth and success prediction
+                </li>
+            </ul>
+        </div>
+
+        <div class="diagram">
+            <svg width="700" height="300" viewBox="0 0 700 300">
+                <!-- Background -->
+                <rect x="50" y="25" width="600" height="250" rx="15" ry="15" fill="rgba(26, 27, 38, 0.7)" stroke="rgba(100, 255, 218, 0.1)" stroke-width="1"/>
+
+                <!-- Center circle -->
+                <circle cx="350" cy="150" r="60" fill="rgba(67, 97, 238, 0.1)" stroke="rgba(100, 255, 218, 0.7)" stroke-width="1.5"/>
+                <circle cx="350" cy="150" r="55" fill="transparent" stroke="rgba(247, 37, 133, 0.4)" stroke-width="0.75" stroke-dasharray="3,3"/>
+                <text x="350" y="145" fill="#64ffda" text-anchor="middle" font-weight="bold" font-size="18">LumaraAI</text>
+                <text x="350" y="165" fill="#a7a9be" text-anchor="middle" font-size="10">AI MATCHING MODELS</text>
+
+                <!-- Input Nodes - Left Side -->
+                <circle cx="150" cy="80" r="40" fill="rgba(67, 97, 238, 0.1)" stroke="rgba(100, 255, 218, 0.3)" stroke-width="1"/>
+                <text x="150" y="85" fill="#e0e1dd" text-anchor="middle" font-size="11">Communication</text>
+                <line x1="190" y1="80" x2="290" y2="150" stroke="rgba(100, 255, 218, 0.6)" stroke-width="1.5" stroke-dasharray="5,3"/>
+
+                <circle cx="150" cy="150" r="40" fill="rgba(67, 97, 238, 0.1)" stroke="rgba(100, 255, 218, 0.3)" stroke-width="1"/>
+                <text x="150" y="155" fill="#e0e1dd" text-anchor="middle" font-size="11">Career Data</text>
+                <line x1="190" y1="150" x2="290" y2="150" stroke="rgba(100, 255, 218, 0.6)" stroke-width="1.5" stroke-dasharray="5,3"/>
+
+                <circle cx="150" cy="220" r="40" fill="rgba(67, 97, 238, 0.1)" stroke="rgba(100, 255, 218, 0.3)" stroke-width="1"/>
+                <text x="150" y="225" fill="#e0e1dd" text-anchor="middle" font-size="11">Professional</text>
+                <line x1="190" y1="220" x2="290" y2="150" stroke="rgba(100, 255, 218, 0.6)" stroke-width="1.5" stroke-dasharray="5,3"/>
+
+                <!-- Output Nodes - Right Side -->
+                <circle cx="550" cy="80" r="40" fill="rgba(247, 37, 133, 0.1)" stroke="rgba(247, 37, 133, 0.5)" stroke-width="1"/>
+                <text x="550" y="85" fill="#e0e1dd" text-anchor="middle" font-size="11">Optimal Mentor</text>
+                <line x1="410" y1="150" x2="510" y2="80" stroke="rgba(247, 37, 133, 0.6)" stroke-width="1.5" stroke-dasharray="5,3"/>
+
+                <circle cx="550" cy="150" r="40" fill="rgba(247, 37, 133, 0.1)" stroke="rgba(247, 37, 133, 0.5)" stroke-width="1"/>
+                <text x="550" y="155" fill="#e0e1dd" text-anchor="middle" font-size="11">Career Insights</text>
+                <line x1="410" y1="150" x2="510" y2="150" stroke="rgba(247, 37, 133, 0.6)" stroke-width="1.5" stroke-dasharray="5,3"/>
+
+                <circle cx="550" cy="220" r="40" fill="rgba(247, 37, 133, 0.1)" stroke="rgba(247, 37, 133, 0.5)" stroke-width="1"/>
+                <text x="550" y="225" fill="#e0e1dd" text-anchor="middle" font-size="11">Growth Analytics</text>
+                <line x1="410" y1="150" x2="510" y2="220" stroke="rgba(247, 37, 133, 0.6)" stroke-width="1.5" stroke-dasharray="5,3"/>
+            </svg>
+        </div>
+
+        <div class="contact">
+            <a href="mailto:charleslw2017@gmail.com" class="contact-button">Contact Us</a>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2025 LumaraAI
+    </footer>
+</body>
+</html>
