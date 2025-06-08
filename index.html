@@ -1,710 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lumara</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        :root {
-            --primary: #4361ee;
-            --secondary: #3a0ca3;
-            --accent: #f72585;
-            --text: #e0e1dd;
-            --dark: #0b0c10;
-            --darker: #1a1b26;
-            --highlight: #64ffda;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            color: var(--text);
-            background: var(--dark);
-            background-image: linear-gradient(135deg, #0b0c10 0%, #1a1b26 100%);
-            min-height: 100vh;
-            margin: 0;
-            overflow-x: hidden;
-        }
-
-        .nav-bar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background: rgba(10, 11, 15, 0.8);
-            backdrop-filter: blur(10px);
-            z-index: 1000;
-            padding: 20px 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid rgba(100, 255, 218, 0.1);
-        }
-
-        .nav-logo {
-            font-size: 2rem;
-            font-weight: bold;
-            background: linear-gradient(90deg, var(--highlight), var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: 2px;
-        }
-
-        .nav-contact {
-            background: transparent;
-            border: 1px solid var(--highlight);
-            color: var(--highlight);
-            padding: 8px 20px;
-            border-radius: 30px;
-            font-size: 0.9rem;
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-
-        .nav-contact:hover {
-            background: var(--highlight);
-            color: var(--darker);
-        }
-
-        .hero-section {
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: flex-start;
-            padding: 0 10%;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero-section::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 70%;
-            height: 100%;
-            background-image: 
-                radial-gradient(circle at 70% 30%, rgba(247, 37, 133, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 30% 70%, rgba(67, 97, 238, 0.1) 0%, transparent 50%);
-            z-index: -1;
-        }
-
-        .hero-text {
-            max-width: 600px;
-            margin-bottom: 60px;
-        }
-
-        h1 {
-            font-size: 5rem;
-            margin-bottom: 20px;
-            line-height: 1;
-        }
-
-        .hero-subtitle {
-            font-size: 1.3rem;
-            line-height: 1.6;
-            color: rgba(224, 225, 221, 0.8);
-            margin-bottom: 40px;
-        }
-
-        .scroll-indicator {
-            position: absolute;
-            bottom: 40px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: var(--highlight);
-            font-size: 1.5rem;
-            animation: bounce 2s infinite;
-        }
-
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% {transform: translateY(0) translateX(-50%);}
-            40% {transform: translateY(-20px) translateX(-50%);}
-            60% {transform: translateY(-10px) translateX(-50%);}
-        }
-
-        .features-section {
-            padding: 100px 10%;
-            position: relative;
-        }
-
-        .section-title {
-            font-size: 2.5rem;
-            margin-bottom: 80px;
-            position: relative;
-            display: inline-block;
-        }
-
-        .section-title::after {
-            content: "";
-            position: absolute;
-            left: 0;
-            bottom: -15px;
-            width: 80px;
-            height: 4px;
-            background: var(--accent);
-        }
-
-        .feature-blocks {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 30px;
-            justify-content: space-between;
-        }
-
-        .feature-block {
-            flex: 1 1 300px;
-            padding: 40px;
-            background: linear-gradient(135deg, rgba(26, 27, 38, 0.8), rgba(11, 12, 16, 0.8));
-            border-radius: 10px;
-            position: relative;
-            overflow: hidden;
-            transition: transform 0.3s ease;
-            border-top: 1px solid rgba(100, 255, 218, 0.1);
-            border-left: 1px solid rgba(100, 255, 218, 0.1);
-        }
-
-        .feature-block:hover {
-            transform: translateY(-10px);
-        }
-
-        .feature-block::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--primary);
-            opacity: 0.03;
-            z-index: -1;
-        }
-
-        .feature-icon {
-            font-size: 2.5rem;
-            color: var(--highlight);
-            margin-bottom: 20px;
-            display: inline-block;
-            border-radius: 50%;
-            width: 80px;
-            height: 80px;
-            line-height: 80px;
-            text-align: center;
-            background: rgba(100, 255, 218, 0.1);
-        }
-
-        .feature-title {
-            font-size: 1.5rem;
-            margin-bottom: 15px;
-            color: var(--text);
-        }
-
-        .diagram-section {
-            padding: 100px 10%;
-            position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-        }
-
-        .diagram-container {
-            width: 100%;
-            max-width: 900px;
-            background: rgba(26, 27, 38, 0.5);
-            border-radius: 20px;
-            padding: 50px;
-            position: relative;
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(100, 255, 218, 0.1);
-        }
-
-        .diagram-container::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: 
-                radial-gradient(circle at 30% 20%, rgba(67, 97, 238, 0.05) 0%, transparent 50%),
-                radial-gradient(circle at 70% 80%, rgba(247, 37, 133, 0.05) 0%, transparent 50%);
-            z-index: -1;
-            border-radius: 20px;
-        }
-
-        svg {
-            width: 100%;
-            height: auto;
-        }
-
-        .footer {
-            background: var(--darker);
-            padding: 40px;
-            text-align: center;
-            color: rgba(224, 225, 221, 0.6);
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        @media (max-width: 768px) {
-            .hero-section {
-                padding: 100px 5% 40px;
-                height: auto;
-                min-height: 100vh;
-            }
-
-            h1 {
-                font-size: 3.5rem;
-            }
-
-            .feature-blocks {
-                flex-direction: column;
-            }
-
-            .section-title {
-                font-size: 2rem;
-                margin-bottom: 60px;
-            }
-
-            .feature-block {
-                flex: 1 1 100%;
-            }
-
-            .diagram-container {
-                padding: 30px;
-            }
-
-            .diagram-section,
-            .features-section {
-                padding: 80px 5%;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lumara – In Development</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #0b0c10;
+      font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+      color: #e0e1dd;
+      position: relative;
+      overflow: hidden;
+    }
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: repeating-linear-gradient(135deg, rgba(67,97,238,0.04) 0 16px, transparent 16px 32px),
+                  radial-gradient(circle at 80% 20%, #f7258533 0 240px, transparent 400px),
+                  radial-gradient(circle at 20% 80%, #4361ee22 0 160px, transparent 400px);
+      z-index: 0;
+      pointer-events: none;
+    }
+    .center-box {
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 52px 38px 38px 38px;
+      border-radius: 32px 16px 32px 16px;
+      background: rgba(30,32,46,0.82);
+      box-shadow: 0 4px 32px 0 rgba(67,97,238,0.06), 0 1.5px 12px 0 rgba(247,37,133,0.10);
+      min-width: 320px;
+      min-height: 220px;
+      border: 1.5px solid #4361ee33;
+      position: relative;
+    }
+    .center-box .dev-icon {
+      font-size: 2.7rem;
+      color: #f72585;
+      margin-bottom: 0.5rem;
+      text-shadow: 0 0 12px #4361ee66;
+      animation: sparkle 2.5s infinite alternate;
+    }
+    @keyframes sparkle {
+      0% { filter: brightness(1); }
+      100% { filter: brightness(1.18) drop-shadow(0 0 8px #f72585cc); }
+    }
+    .dev-title {
+      font-size: 2.2rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      color: #4361ee;
+      margin-bottom: 0.7rem;
+      text-align: center;
+      text-shadow: 0 2px 18px #3a0ca344;
+    }
+    .dev-sub {
+      font-size: 1.09rem;
+      color: #a7a9be;
+      font-weight: 400;
+      text-align: center;
+      margin-bottom: 0.5rem;
+    }
+    .dev-footer {
+      font-size: 0.92rem;
+      color: #64ffda;
+      margin-top: 2.2rem;
+      opacity: 0.7;
+      letter-spacing: 1px;
+    }
+    @media (max-width: 600px) {
+      .center-box { padding: 28px 6px 18px 6px; min-width: 90vw; }
+      .dev-title { font-size: 1.3rem; }
+      .center-box .dev-icon { font-size: 2rem; }
+    }
+  </style>
 </head>
 <body>
-    <nav class="nav-bar">
-        <div class="nav-logo">LUMARA</div>
-        <a href="mailto:charleslw2017@gmail.com" class="nav-contact">Contact Us</a>
-    </nav>
-
-    <section class="hero-section">
-        <div class="hero-text">
-            <h1>AI-Powered Mentorship Platform</h1>
-            <p class="hero-subtitle">An AI-powered mentorship development network that creates optimal mentor-mentee relationships for ALL areas of interest.</p>
-        </div>
-        <div class="scroll-indicator">
-            <i class="fas fa-chevron-down"></i>
-        </div>
-    </section>
-
-    <section class="features-section">
-        <h2 class="section-title">How We Use AI</h2>
-        
-        <div class="feature-blocks">
-            <div class="feature-block">
-                <div class="feature-icon">
-                    <i class="fas fa-brain"></i>
-                </div>
-                <h3 class="feature-title">Smart Matching</h3>
-                <p>Match mentors and mentees using AI analysis of communication styles, knowledge overlap, and career trajectories</p>
-            </div>
-            
-            <div class="feature-block">
-                <div class="feature-icon">
-                    <i class="fas fa-route"></i>
-                </div>
-                <h3 class="feature-title">Career Pathfinding</h3>
-                <p>Provide personalized career path optimization based on skill development patterns and industry trends</p>
-            </div>
-            
-            <div class="feature-block">
-                <div class="feature-icon">
-                    <i class="fas fa-chart-line"></i>
-                </div>
-                <h3 class="feature-title">Growth Analytics</h3>
-                <p>Deliver data-driven insights for professional & personal growth</p>
-            </div>
-        </div>
-    </section>
-
-    <section class="diagram-section">
-        <div class="section-title-container">
-            <h2 class="section-title">AI Matching Ecosystem</h2>
-        </div>
-        <div class="diagram-grid">
-            <div class="input-column">
-                <h3 class="column-title">Input Sources</h3>
-                <div class="data-card">
-                    <div class="data-icon">
-                        <i class="fas fa-comments"></i>
-                    </div>
-                    <div class="data-title">Communication Styles</div>
-                    <div class="data-progress">
-                        <div class="progress-bar" style="width: 85%"></div>
-                    </div>
-                </div>
-                
-                <div class="data-card">
-                    <div class="data-icon">
-                        <i class="fas fa-briefcase"></i>
-                    </div>
-                    <div class="data-title">Career History Data</div>
-                    <div class="data-progress">
-                        <div class="progress-bar" style="width: 90%"></div>
-                    </div>
-                </div>
-                
-                <div class="data-card">
-                    <div class="data-icon">
-                        <i class="fas fa-award"></i>
-                    </div>
-                    <div class="data-title">Professional Skills</div>
-                    <div class="data-progress">
-                        <div class="progress-bar" style="width: 70%"></div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="processing-column">
-                <div class="processor-container">
-                    <div class="processor-hexagon">
-                        <div class="processor-content">
-                            <div class="processor-logo">LumaraAI</div>
-                            <div class="processor-subtitle">Neural Matching Engine</div>
-                        </div>
-                    </div>
-                    
-                    <div class="processor-rings">
-                        <div class="ring ring-1"></div>
-                        <div class="ring ring-2"></div>
-                        <div class="ring ring-3"></div>
-                    </div>
-                    
-                    <div class="processing-dots">
-                        <div class="dot dot-1"></div>
-                        <div class="dot dot-2"></div>
-                        <div class="dot dot-3"></div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="output-column">
-                <h3 class="column-title">Intelligent Results</h3>
-                <div class="result-card">
-                    <div class="result-percentage">94<span class="percent">%</span></div>
-                    <div class="result-label">Mentor Match Accuracy</div>
-                </div>
-                
-                <div class="result-card">
-                    <div class="result-percentage">87<span class="percent">%</span></div>
-                    <div class="result-label">Career Path Insights</div>
-                </div>
-                
-                <div class="result-card">
-                    <div class="result-percentage">91<span class="percent">%</span></div>
-                    <div class="result-label">Growth Analytics</div>
-                </div>
-            </div>
-        </div>
-    </section>
-    
-    <style>
-        .diagram-section {
-            padding: 100px 5%;
-            background: linear-gradient(160deg, rgba(11, 12, 16, 0.8) 0%, rgba(26, 27, 38, 0.8) 100%);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .section-title-container {
-            text-align: center;
-            margin-bottom: 60px;
-        }
-        
-        .diagram-section .section-title {
-            display: inline-block;
-            position: relative;
-            margin-bottom: 0;
-        }
-        
-        .diagram-section .section-title::after {
-            left: 50%;
-            transform: translateX(-50%);
-        }
-        
-        .diagram-grid {
-            display: grid;
-            grid-template-columns: 1fr 1.2fr 1fr;
-            gap: 40px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        .column-title {
-            font-size: 1.2rem;
-            color: var(--highlight);
-            margin-bottom: 30px;
-            text-align: center;
-            letter-spacing: 1px;
-        }
-        
-        /* Input Column Styles */
-        .input-column {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-        
-        .data-card {
-            background: linear-gradient(135deg, rgba(67, 97, 238, 0.1), rgba(26, 27, 38, 0.6));
-            border-radius: 12px;
-            padding: 20px;
-            border-left: 3px solid var(--primary);
-            transition: all 0.3s ease;
-        }
-        
-        .data-card:hover {
-            transform: translateX(5px);
-            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.2);
-        }
-        
-        .data-icon {
-            color: var(--primary);
-            font-size: 1.5rem;
-            margin-bottom: 10px;
-        }
-        
-        .data-title {
-            font-weight: bold;
-            margin-bottom: 15px;
-        }
-        
-        .data-progress {
-            height: 5px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 5px;
-            overflow: hidden;
-        }
-        
-        .progress-bar {
-            height: 100%;
-            background: var(--primary);
-            border-radius: 5px;
-        }
-        
-        /* Processing Column Styles */
-        .processing-column {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-        }
-        
-        .processor-container {
-            position: relative;
-            width: 200px;
-            height: 200px;
-        }
-        
-        .processor-hexagon {
-            position: relative;
-            width: 130px;
-            height: 150px;
-            background: linear-gradient(135deg, rgba(67, 97, 238, 0.2), rgba(247, 37, 133, 0.2));
-            margin: 20px auto;
-            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border: 1px solid rgba(100, 255, 218, 0.3);
-            z-index: 2;
-        }
-        
-        .processor-content {
-            text-align: center;
-            padding: 20px;
-        }
-        
-        .processor-logo {
-            font-weight: bold;
-            font-size: 1.2rem;
-            color: var(--highlight);
-            margin-bottom: 5px;
-        }
-        
-        .processor-subtitle {
-            font-size: 0.7rem;
-            color: rgba(224, 225, 221, 0.7);
-        }
-        
-        .processor-rings {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
-        
-        .ring {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            border: 1px dashed rgba(100, 255, 218, 0.3);
-            border-radius: 50%;
-        }
-        
-        .ring-1 {
-            width: 160px;
-            height: 160px;
-            animation: pulse 3s infinite;
-        }
-        
-        .ring-2 {
-            width: 200px;
-            height: 200px;
-            animation: pulse 4s infinite;
-        }
-        
-        .ring-3 {
-            width: 240px;
-            height: 240px;
-            animation: pulse 5s infinite;
-        }
-        
-        @keyframes pulse {
-            0% {
-                transform: translate(-50%, -50%) scale(0.8);
-                opacity: 0.5;
-            }
-            50% {
-                transform: translate(-50%, -50%) scale(1);
-                opacity: 1;
-            }
-            100% {
-                transform: translate(-50%, -50%) scale(0.8);
-                opacity: 0.5;
-            }
-        }
-        
-        .processing-dots {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-        }
-        
-        .dot {
-            position: absolute;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--highlight);
-        }
-        
-        .dot-1 {
-            top: 30%;
-            left: 20%;
-            animation: moveDot 10s infinite alternate;
-        }
-        
-        .dot-2 {
-            top: 70%;
-            left: 25%;
-            animation: moveDot 12s infinite alternate-reverse;
-        }
-        
-        .dot-3 {
-            top: 40%;
-            left: 80%;
-            animation: moveDot 9s infinite alternate;
-        }
-        
-        @keyframes moveDot {
-            0% {
-                transform: translate(0, 0);
-            }
-            25% {
-                transform: translate(40px, 20px);
-            }
-            50% {
-                transform: translate(0, 50px);
-            }
-            75% {
-                transform: translate(-40px, 10px);
-            }
-            100% {
-                transform: translate(10px, -30px);
-            }
-        }
-        
-        /* Output Column Styles */
-        .output-column {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-        
-        .result-card {
-            background: linear-gradient(135deg, rgba(247, 37, 133, 0.1), rgba(26, 27, 38, 0.6));
-            border-radius: 12px;
-            padding: 25px;
-            border-right: 3px solid var(--accent);
-            transition: all 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        
-        .result-card:hover {
-            transform: translateX(-5px);
-            box-shadow: 0 5px 15px rgba(247, 37, 133, 0.2);
-        }
-        
-        .result-percentage {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: var(--accent);
-            margin-bottom: 10px;
-        }
-        
-        .percent {
-            font-size: 1.2rem;
-            vertical-align: super;
-        }
-        
-        .result-label {
-            text-align: center;
-            font-size: 0.9rem;
-        }
-        
-        @media (max-width: 900px) {
-            .diagram-grid {
-                grid-template-columns: 1fr;
-                gap: 60px;
-            }
-            
-            .processing-column {
-                order: -1;
-            }
-            
-            .column-title {
-                margin-top: 20px;
-            }
-        }
-    </style>
-
-    <footer class="footer">
-        &copy; 2025 LumaraAI
-    </footer>
+  <div class="center-box">
+    <div class="dev-icon"><i class="fas fa-star"></i></div>
+    <div class="dev-title">Lumara is Evolving</div>
+    <div class="dev-sub">We’re building something inspiring for your future connections.<br>Stay tuned for the next generation of mentorship.</div>
+    <div class="dev-footer">&copy; 2025 Lumara</div>
+  </div>
 </body>
 </html>
