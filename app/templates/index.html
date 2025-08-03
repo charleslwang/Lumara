@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="text-center py-16 animate__animated animate__fadeIn">
+    <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-gray-900 to-black opacity-50 z-0"></div>
+    <div class="relative z-10">
+        <h1 class="text-5xl md:text-6xl font-extrabold text-white leading-tight mb-4">
+            Welcome to <span class="text-indigo-400">Lumara AI</span>
+        </h1>
+        <p class="text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto">
+            Leverage the power of recursive refinement to elevate your ideas from rough concepts to polished, actionable strategies.
+        </p>
+        <div class="space-x-4">
+            <a href="{{ url_for('main.refine') }}" class="inline-block bg-indigo-600 text-white font-bold text-lg px-8 py-4 rounded-lg shadow-lg hover:bg-indigo-700 transition duration-300 transform hover:scale-105">
+                Start Refining Now
+            </a>
+            <a href="#features" class="inline-block bg-gray-700 text-white font-bold text-lg px-8 py-4 rounded-lg shadow-lg hover:bg-gray-600 transition duration-300">
+                Learn More
+            </a>
+        </div>
+    </div>
+</div>
+
+<section id="features" class="py-20">
+    <div class="container mx-auto px-6">
+        <div class="text-center mb-12">
+            <h2 class="text-4xl font-bold text-white">How It Works</h2>
+            <p class="text-gray-400 mt-2">A simple, powerful, iterative process.</p>
+        </div>
+        <div class="grid md:grid-cols-3 gap-8 text-center">
+            <div class="bg-gray-800/50 p-8 rounded-lg animate__animated animate__fadeInUp wow" data-wow-delay="0.1s">
+                <div class="mb-4">
+                    <i data-feather="edit-3" class="w-16 h-16 mx-auto text-indigo-400"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-white mb-2">1. Input Your Prompt</h3>
+                <p class="text-gray-400">Start with a question, a document, an idea, or any other prompt you want to refine.</p>
+            </div>
+            <div class="bg-gray-800/50 p-8 rounded-lg animate__animated animate__fadeInUp wow" data-wow-delay="0.3s">
+                <div class="mb-4">
+                    <i data-feather="refresh-cw" class="w-16 h-16 mx-auto text-indigo-400"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-white mb-2">2. AI-Powered Iteration</h3>
+                <p class="text-gray-400">Our engine generates a solution, critiques it, and revises it in a continuous loop.</p>
+            </div>
+            <div class="bg-gray-800/50 p-8 rounded-lg animate__animated animate__fadeInUp wow" data-wow-delay="0.5s">
+                <div class="mb-4">
+                    <i data-feather="award" class="w-16 h-16 mx-auto text-indigo-400"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-white mb-2">3. Get Polished Results</h3>
+                <p class="text-gray-400">Receive a high-quality, actionable solution that has been rigorously tested and improved.</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

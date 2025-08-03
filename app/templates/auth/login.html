@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-md mx-auto p-8 rounded-lg animate__animated animate__fadeIn glass-effect transform transition-all duration-300 hover:shadow-xl">
+    <h1 class="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-500 mb-4 text-center">Sign In</h1>
+    <form action="" method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <div class="mb-4">
+            <label for="email" class="block text-sm font-medium text-gray-300">{{ form.email.label }}</label>
+            {{ form.email(size=32, class="mt-1 block w-full px-3 py-2 border border-gray-600 bg-gray-800 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-gray-200") }}
+            {% for error in form.email.errors %}
+                <span class="text-red-500 text-xs">{{ error }}</span>
+            {% endfor %}
+        </div>
+        <div class="mb-4">
+            <label for="password" class="block text-sm font-medium text-gray-300">{{ form.password.label }}</label>
+            {{ form.password(size=32, class="mt-1 block w-full px-3 py-2 border border-gray-600 bg-gray-800 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-gray-200") }}
+            {% for error in form.password.errors %}
+                <span class="text-red-500 text-xs">{{ error }}</span>
+            {% endfor %}
+        </div>
+        <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center">
+                {{ form.remember_me(class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-500 rounded bg-gray-700") }} 
+                <label for="remember_me" class="ml-2 block text-sm text-gray-300">{{ form.remember_me.label }}</label>
+            </div>
+        </div>
+        <div>
+            {{ form.submit(class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-300") }}
+        </div>
+    </form>
+    <p class="mt-6 text-center text-sm text-gray-400">
+        New User? <a href="{{ url_for('auth.register') }}" class="font-medium text-indigo-400 hover:text-indigo-300">Create an account</a>
+    </p>
+</div>
+{% endblock %}
