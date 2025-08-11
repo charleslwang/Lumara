@@ -1,0 +1,14 @@
+google-generativeai>=0.3.0
+python-dotenv>=0.19.0
+pydantic>=1.9.0
+python-multipart>=0.0.5  # For file uploads if needed
+fastapi>=0.68.0  # For API endpoints
+uvicorn>=0.15.0  # ASGI server
+python-jose[cryptography]>=3.3.0  # For JWT if needed
+passlib[bcrypt]>=1.7.4  # For password hashing if needed
+flask>=2.0.0  # For API server
+flask-cors>=3.0.0  # For handling CORS
+
+# Testing
+pytest>=6.2.0
+pytest-playwright>=0.3.0
