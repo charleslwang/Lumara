@@ -4,7 +4,7 @@
 const LUMARA_CONFIG = {
     // Replace with your actual Render.com backend URL
     // Format: https://your-app-name.onrender.com
-    BACKEND_URL: 'https://lumara-backend.onrender.com',
+    BACKEND_URL: 'https://lumara-nljh.onrender.com',
     
     // Alternative backend URLs for failover (optional)
     FALLBACK_URLS: [
