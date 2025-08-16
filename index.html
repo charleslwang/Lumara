@@ -115,16 +115,47 @@
             </div>
             
             <div class="form-group">
-              <label for="api-key"><i class="fas fa-key"></i> API Key</label>
-              <input type="password" id="api-key" placeholder="Enter your API key">
-              <small><i class="fas fa-shield-halved"></i> Your API key is only used for this session and not stored.</small>
+              <label for="iterations"><i class="fas fa-repeat"></i> Iterations</label>
+              <select id="iterations">
+                <option value="1">1 iteration</option>
+                <option value="2">2 iterations</option>
+                <option value="3" selected>3 iterations</option>
+                <option value="4">4 iterations</option>
+                <option value="5">5 iterations</option>
+              </select>
+              <small><i class="fas fa-info-circle"></i> More iterations = higher quality but longer processing time</small>
             </div>
           </div>
           
-          <button id="refine-button" class="cta-button">
-            <span class="button-text"><i class="fas fa-sparkles"></i> Refine Output</span>
-            <span class="spinner hidden"></span>
-          </button>
+          <div class="form-group">
+            <label for="api-key"><i class="fas fa-key"></i> API Key</label>
+            <input type="password" id="api-key" placeholder="Enter your API key">
+            <small><i class="fas fa-shield-halved"></i> Your API key is only used for this session and not stored.</small>
+          </div>
+          
+          <div class="action-buttons">
+            <button id="refine-button" class="cta-button">
+              <span class="button-text"><i class="fas fa-sparkles"></i> Refine Output</span>
+              <span class="spinner hidden"></span>
+            </button>
+            <button id="stop-button" class="secondary-button hidden">
+              <i class="fas fa-stop"></i> Stop Process
+            </button>
+          </div>
+          
+          <!-- Progress Indicator -->
+          <div id="progress-container" class="progress-container hidden">
+            <div class="progress-header">
+              <h4><i class="fas fa-gear fa-spin"></i> Refinement in Progress</h4>
+              <span id="progress-text">Starting refinement...</span>
+            </div>
+            <div class="progress-bar">
+              <div id="progress-fill" class="progress-fill"></div>
+            </div>
+            <div class="current-iteration">
+              <span id="current-iteration-text">Preparing...</span>
+            </div>
+          </div>
         </div>
         
         <section id="results" class="section hidden">
@@ -155,6 +186,15 @@
                   <div class="tab-header">
                     <h3><i class="fas fa-code-branch"></i> Refinement Journey</h3>
                     <p class="tab-description">Follow the evolution of your content through each refinement iteration.</p>
+                    <div class="iteration-controls">
+                      <button id="restart-from-iteration" class="secondary-button hidden">
+                        <i class="fas fa-redo"></i> Restart from Selected
+                      </button>
+                      <div class="view-toggle">
+                        <button class="toggle-btn active" data-view="timeline">Timeline</button>
+                        <button class="toggle-btn" data-view="comparison">Compare</button>
+                      </div>
+                    </div>
                   </div>
                   <div id="iterations-container"></div>
                 </div>

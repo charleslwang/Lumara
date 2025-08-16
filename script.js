@@ -9,15 +9,30 @@ document.addEventListener('DOMContentLoaded', () => {
   const modelSelect = document.getElementById('model');
   const apiKeyInput = document.getElementById('api-key');
   const iterationsInput = document.getElementById('iterations');
-  const runButton = document.getElementById('run-button');
+  const refineButton = document.getElementById('refine-button');
+  const stopButton = document.getElementById('stop-button');
   const resultsSection = document.getElementById('results');
   
+  // Progress elements
+  const progressContainer = document.getElementById('progress-container');
+  const progressFill = document.getElementById('progress-fill');
+  const progressText = document.getElementById('progress-text');
+  const currentIterationText = document.getElementById('current-iteration-text');
+  
   // Results elements
-  const tabButtons = document.querySelectorAll('.tab-button');
+  const tabButtons = document.querySelectorAll('.tab');
   const tabPanes = document.querySelectorAll('.tab-pane');
   const finalOutput = document.getElementById('final-output');
-  const iterationsList = document.getElementById('iterations-list');
-  const evaluationScores = document.getElementById('evaluation-scores');
+  const iterationsContainer = document.getElementById('iterations-container');
+  const restartButton = document.getElementById('restart-from-iteration');
+  const viewToggleBtns = document.querySelectorAll('.toggle-btn');
+  
+  // State variables
+  let currentRefinementProcess = null;
+  let isProcessing = false;
+  let iterationsData = [];
+  let selectedIteration = null;
+  let currentView = 'timeline';
   
   // Navigation smooth scrolling
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -99,10 +114,18 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
     
-    // Show loading state
-    const refineButton = document.getElementById('refine-button');
+    // Start processing
+    isProcessing = true;
+    startProgressIndicator(maxIterations);
+    
+    // Update button states
     refineButton.innerHTML = '<span class="spinner"></span> Processing...';
     refineButton.disabled = true;
+    stopButton.classList.remove('hidden');
+    
+    // Clear previous results
+    iterationsData = [];
+    selectedIteration = null;
     
     try {
       // Call the backend API using config
@@ -202,9 +225,8 @@ document.addEventListener('DOMContentLoaded', () => {
       
       alert(errorMessage);
     } finally {
-      // Reset button state
-      refineButton.innerHTML = 'Refine Output';
-      refineButton.disabled = false;
+      // Reset UI state
+      stopProcessing();
     }
   });
   
@@ -213,62 +235,169 @@ document.addEventListener('DOMContentLoaded', () => {
     // Display final output
     finalOutput.textContent = result.refined_output;
     
-    // Display iterations
-    iterationsList.innerHTML = '';
-    result.iterations.forEach(iteration => {
-      const iterationEl = document.createElement('div');
-      iterationEl.className = 'iteration-item';
-      
-      const header = document.createElement('div');
-      header.className = 'iteration-header';
-      
-      const title = document.createElement('h4');
-      title.textContent = `Iteration ${iteration.iteration}`;
-      
-      const score = document.createElement('div');
-      score.textContent = `Score: ${(iteration.score * 100).toFixed(0)}%`;
-      score.style.color = 'var(--primary)';
-      score.style.fontWeight = 'bold';
-      
-      header.appendChild(title);
-      header.appendChild(score);
-      
-      const content = document.createElement('div');
-      content.className = 'iteration-content';
-      content.textContent = iteration.solution;
-      
-      const critique = document.createElement('div');
-      critique.className = 'iteration-critique';
-      critique.innerHTML = `<h5>Critique:</h5><p>${iteration.critique}</p>`;
-      
-      iterationEl.appendChild(header);
-      iterationEl.appendChild(content);
-      iterationEl.appendChild(critique);
-      
-      iterationsList.appendChild(iterationEl);
-    });
+    // Display iterations using new system
+    if (result.iterations_data && result.iterations_data.length > 0) {
+      displayIterations(result.iterations_data);
+    }
     
-    // Display evaluation scores
-    evaluationScores.innerHTML = '';
+    // Show results section
+    resultsSection.classList.remove('hidden');
+    resultsSection.scrollIntoView({ behavior: 'smooth' });
     
-    // Overall score
-    const overallScore = document.createElement('div');
-    overallScore.className = 'score-card';
-    overallScore.innerHTML = `
-      <h4>Overall</h4>
-      <div class="score-value">${(result.scores.overall * 100).toFixed(0)}%</div>
-    `;
-    evaluationScores.appendChild(overallScore);
-    
-    // Detail scores
-    for (const [key, value] of Object.entries(result.scores.details)) {
-      const scoreCard = document.createElement('div');
-      scoreCard.className = 'score-card';
-      scoreCard.innerHTML = `
-        <h4>${key.charAt(0).toUpperCase() + key.slice(1)}</h4>
-        <div class="score-value">${(value * 100).toFixed(0)}%</div>
+    // Display evaluation scores if available
+    const scoresContainer = document.getElementById('scores-container');
+    if (scoresContainer && result.scores) {
+      scoresContainer.innerHTML = '';
+      
+      // Overall score
+      const overallScore = document.createElement('div');
+      overallScore.className = 'score-card';
+      overallScore.innerHTML = `
+        <h4>Overall</h4>
+        <div class="score-value">${(result.scores.overall * 100).toFixed(0)}%</div>
       `;
-      evaluationScores.appendChild(scoreCard);
+      scoresContainer.appendChild(overallScore);
+      
+      // Detail scores
+      if (result.scores.details) {
+        for (const [key, value] of Object.entries(result.scores.details)) {
+          const scoreCard = document.createElement('div');
+          scoreCard.className = 'score-card';
+          scoreCard.innerHTML = `
+            <h4>${key.charAt(0).toUpperCase() + key.slice(1)}</h4>
+            <div class="score-value">${(value * 100).toFixed(0)}%</div>
+          `;
+          scoresContainer.appendChild(scoreCard);
+        }
+      }
     }
   }
+  
+  // Progress indicator functions
+  function startProgressIndicator(maxIterations) {
+    progressContainer.classList.remove('hidden');
+    progressFill.style.width = '0%';
+    progressText.textContent = 'Initializing refinement process...';
+    currentIterationText.textContent = 'Preparing first iteration...';
+  }
+  
+  function updateProgress(currentIteration, maxIterations, status = '') {
+    const progress = (currentIteration / maxIterations) * 100;
+    progressFill.style.width = `${progress}%`;
+    progressText.textContent = status || `Processing iteration ${currentIteration} of ${maxIterations}`;
+    currentIterationText.textContent = `Iteration ${currentIteration}: ${status || 'In progress...'}`;
+  }
+  
+  function stopProcessing() {
+    isProcessing = false;
+    progressContainer.classList.add('hidden');
+    refineButton.innerHTML = '<span class="button-text"><i class="fas fa-sparkles"></i> Refine Output</span>';
+    refineButton.disabled = false;
+    stopButton.classList.add('hidden');
+  }
+  
+  // Stop button handler
+  stopButton?.addEventListener('click', () => {
+    if (currentRefinementProcess) {
+      currentRefinementProcess.abort();
+    }
+    stopProcessing();
+    alert('Refinement process stopped.');
+  });
+  
+  // Enhanced iteration display
+  function displayIterations(iterations) {
+    iterationsContainer.innerHTML = '';
+    iterationsData = iterations;
+    
+    if (currentView === 'timeline') {
+      displayTimelineView(iterations);
+    } else {
+      displayComparisonView(iterations);
+    }
+  }
+  
+  function displayTimelineView(iterations) {
+    iterations.forEach((iteration, index) => {
+      const iterationEl = document.createElement('div');
+      iterationEl.className = 'iteration-item selectable';
+      iterationEl.dataset.iteration = index;
+      
+      iterationEl.innerHTML = `
+        <div class="iteration-header">
+          <span class="iteration-number">Iteration ${index + 1}</span>
+          <span class="iteration-score">Score: ${(iteration.score * 100).toFixed(0)}%</span>
+        </div>
+        <div class="iteration-content">${iteration.solution}</div>
+      `;
+      
+      iterationEl.addEventListener('click', () => selectIteration(index));
+      iterationsContainer.appendChild(iterationEl);
+    });
+  }
+  
+  function displayComparisonView(iterations) {
+    if (iterations.length < 2) {
+      iterationsContainer.innerHTML = '<p>Need at least 2 iterations for comparison view.</p>';
+      return;
+    }
+    
+    const comparisonEl = document.createElement('div');
+    comparisonEl.className = 'comparison-view';
+    
+    const firstIteration = iterations[0];
+    const lastIteration = iterations[iterations.length - 1];
+    
+    comparisonEl.innerHTML = `
+      <div class="comparison-side">
+        <h4>Initial Output (Iteration 1)</h4>
+        <div class="iteration-content">${firstIteration.solution}</div>
+      </div>
+      <div class="comparison-side">
+        <h4>Final Output (Iteration ${iterations.length})</h4>
+        <div class="iteration-content">${lastIteration.solution}</div>
+      </div>
+    `;
+    
+    iterationsContainer.appendChild(comparisonEl);
+  }
+  
+  function selectIteration(index) {
+    // Remove previous selection
+    document.querySelectorAll('.iteration-item.selected').forEach(el => {
+      el.classList.remove('selected');
+    });
+    
+    // Select new iteration
+    const iterationEl = document.querySelector(`[data-iteration="${index}"]`);
+    if (iterationEl) {
+      iterationEl.classList.add('selected');
+      selectedIteration = index;
+      restartButton.classList.remove('hidden');
+    }
+  }
+  
+  // View toggle handlers
+  viewToggleBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      viewToggleBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentView = btn.dataset.view;
+      
+      if (iterationsData.length > 0) {
+        displayIterations(iterationsData);
+      }
+    });
+  });
+  
+  // Restart from iteration handler
+  restartButton?.addEventListener('click', () => {
+    if (selectedIteration !== null) {
+      const confirmRestart = confirm(`Restart refinement from iteration ${selectedIteration + 1}?`);
+      if (confirmRestart) {
+        // TODO: Implement restart functionality
+        alert('Restart functionality will be implemented in the backend.');
+      }
+    }
+  });
 });

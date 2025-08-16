@@ -114,9 +114,10 @@ class LumaraPipeline:
             Dictionary containing the refined output and metadata
         """
         try:
-            # Run the Refinery pipeline
+            # Run the Refinery pipeline with initial solution
             result = self.pipeline.run(
                 original_prompt=prompt,
+                initial_solution=model_output,
                 max_iterations=self.config.max_iterations
             )
             

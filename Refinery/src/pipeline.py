@@ -79,13 +79,14 @@ class RecursiveImprovementPipeline:
             logger.error(f"Failed to load prompts: {str(e)}")
             raise RuntimeError(f"Failed to load prompt templates: {str(e)}") from e
 
-    def run(self, original_prompt: str, max_iterations: int = 3) -> Dict[str, Any]:
+    def run(self, original_prompt: str, max_iterations: int = 3, initial_solution: str = None) -> Dict[str, Any]:
         """
         Run the recursive improvement pipeline.
         
         Args:
             original_prompt: The original user prompt
             max_iterations: Maximum number of iterations to run
+            initial_solution: Optional initial solution to refine (if None, generates from scratch)
             
         Returns:
             Dict containing the best solution and iteration history
@@ -116,15 +117,20 @@ class RecursiveImprovementPipeline:
             print(f"\nIteration {i}/{max_iterations}...")
             
             try:
-                # Generate solution
-                logger.debug("Generating solution...")
-                solution = self._generate_solution(
-                    original_prompt=original_prompt,
-                    previous_solution=previous_solution,
-                    previous_critique=previous_critique,
-                    iteration=i,
-                    total_iterations=max_iterations
-                )
+                # Use initial solution for first iteration if provided
+                if i == 1 and initial_solution:
+                    logger.debug("Using provided initial solution for first iteration")
+                    solution = initial_solution
+                else:
+                    # Generate solution
+                    logger.debug("Generating solution...")
+                    solution = self._generate_solution(
+                        original_prompt=original_prompt,
+                        previous_solution=previous_solution,
+                        previous_critique=previous_critique,
+                        iteration=i,
+                        total_iterations=max_iterations
+                    )
                 
                 # Evaluate solution
                 logger.debug("Evaluating solution...")
