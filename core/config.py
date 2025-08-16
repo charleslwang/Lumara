@@ -45,6 +45,10 @@ class PipelineConfig:
             return self.config[name]
         raise AttributeError(f"'{self.__class__.__name__}' has no attribute '{name}'")
     
+    def get(self, key: str, default: Any = None) -> Any:
+        """Get a configuration value with optional default."""
+        return self.config.get(key, default)
+    
     def to_dict(self) -> Dict[str, Any]:
         """Return the configuration as a dictionary."""
         return self.config.copy()
