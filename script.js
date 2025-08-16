@@ -157,46 +157,8 @@ document.addEventListener('DOMContentLoaded', () => {
         throw new Error(result.error);
       }
       
-      // Display results
-      resultsSection.classList.remove('hidden');
-      
-      // Set final output
-      finalOutput.textContent = result.refined_output;
-      
-      // Set iteration count
-      iterationsCount.textContent = result.iterations;
-      
-      // Set overall score
-      overallScore.textContent = result.scores.overall.toFixed(2);
-      
-      // Clear previous iterations
-      iterationsList.innerHTML = '';
-      
-      // Add iterations
-      result.iterations_data.forEach((iteration, index) => {
-        const iterItem = document.createElement('div');
-        iterItem.className = 'iteration-item';
-        iterItem.innerHTML = `
-          <div class="iteration-header">
-            <h4>Iteration ${index + 1}</h4>
-            <span class="iteration-score">Score: ${iteration.score.toFixed(2)}</span>
-          </div>
-          <p>${iteration.output}</p>
-        `;
-        iterationsList.appendChild(iterItem);
-      });
-      
-      // Set evaluation scores
-      evaluationScores.innerHTML = '';
-      Object.entries(result.scores.details).forEach(([key, value]) => {
-        const scoreCard = document.createElement('div');
-        scoreCard.className = 'score-card';
-        scoreCard.innerHTML = `
-          <h4>${key.charAt(0).toUpperCase() + key.slice(1)}</h4>
-          <div class="score-value">${value.toFixed(2)}</div>
-        `;
-        evaluationScores.appendChild(scoreCard);
-      });
+      // Display results using new system
+      displayResults(result);
       
       // Scroll to results
       resultsSection.scrollIntoView({ behavior: 'smooth' });
@@ -254,7 +216,7 @@ document.addEventListener('DOMContentLoaded', () => {
       overallScore.className = 'score-card';
       overallScore.innerHTML = `
         <h4>Overall</h4>
-        <div class="score-value">${(result.scores.overall * 100).toFixed(0)}%</div>
+        <div class="score-value">${result.scores.overall.toFixed(1)}/10</div>
       `;
       scoresContainer.appendChild(overallScore);
       
@@ -265,7 +227,7 @@ document.addEventListener('DOMContentLoaded', () => {
           scoreCard.className = 'score-card';
           scoreCard.innerHTML = `
             <h4>${key.charAt(0).toUpperCase() + key.slice(1)}</h4>
-            <div class="score-value">${(value * 100).toFixed(0)}%</div>
+            <div class="score-value">${value.toFixed(1)}/10</div>
           `;
           scoresContainer.appendChild(scoreCard);
         }

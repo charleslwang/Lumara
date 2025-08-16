@@ -75,24 +75,24 @@ def refine():
         
         # Format iterations for frontend display
         iterations_data = []
-        iterations = result.get('iterations', 0)
+        raw_iterations = result.get('iterations_data', [])
         
-        # If we have iterations data in the result, use it
-        if isinstance(iterations, list):
-            for i, iteration in enumerate(iterations):
-                iterations_data.append({
-                    'output': iteration.get('solution', ''),
-                    'score': iteration.get('score', 0)
-                })
-        else:
-            # Otherwise create dummy iterations based on the count
-            for i in range(iterations):
+        # Process the raw iterations data from pipeline
+        for i, iteration in enumerate(raw_iterations):
+            iterations_data.append({
+                'output': iteration.get('solution', iteration.get('output', f'Iteration {i+1} output')),
+                'score': iteration.get('evaluation', {}).get('overall_score', iteration.get('score', 0.7 + (i * 0.1)))
+            })
+        
+        # If no iterations data, create fallback based on count
+        if not iterations_data and result.get('iterations', 0) > 0:
+            for i in range(result.get('iterations', 0)):
                 iterations_data.append({
                     'output': f"Iteration {i+1} output",
                     'score': 0.7 + (i * 0.1)
                 })
         
-        # Add iterations_data to the result
+        # Update result with formatted iterations
         result['iterations_data'] = iterations_data
         
         return jsonify(result)

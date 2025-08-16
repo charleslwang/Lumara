@@ -126,12 +126,14 @@ class LumaraPipeline:
             )
             
             # Format the result
+            iterations_list = result.get('iterations', [])
             return {
                 'refined_output': result.get('best_solution', model_output),
-                'iterations': len(result.get('iterations', [])),
+                'iterations': len(iterations_list),
+                'iterations_data': iterations_list,  # Include raw iterations for frontend
                 'scores': {
                     'overall': result.get('best_score', 0),
-                    'details': result.get('iterations', [{}])[-1].get('evaluation', {}) if result.get('iterations') else {}
+                    'details': iterations_list[-1].get('evaluation', {}) if iterations_list else {}
                 },
                 'metadata': {
                     'session_id': result.get('session_id'),
