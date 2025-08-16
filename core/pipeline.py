@@ -131,7 +131,7 @@ class LumaraPipeline:
                 'iterations': len(result.get('iterations', [])),
                 'scores': {
                     'overall': result.get('best_score', 0),
-                    'details': result.get('iterations', [{}])[-1].get('evaluation', {})
+                    'details': result.get('iterations', [{}])[-1].get('evaluation', {}) if result.get('iterations') else {}
                 },
                 'metadata': {
                     'session_id': result.get('session_id'),
