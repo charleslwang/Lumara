@@ -40,19 +40,11 @@ class LumaraPipeline:
         self._setup_pipeline()
     
     def _setup_pipeline(self) -> None:
-        """Set up the Refinery pipeline with configuration."""
-        # Get API key from config (user-provided) instead of environment
-        api_key = self.config.get('api_key')
-        if not api_key:
-            raise ValueError(
-                "API key not found in configuration. "
-                "Users must provide their own Google Gemini API key."
-            )
-        
+        """Set up the Refinery pipeline configuration (without API key)."""
         try:
-            # Initialize the Refinery pipeline with user's API key
-            self.pipeline = RefineryPipeline(api_key=api_key)
-            logger.info("Successfully initialized Refinery pipeline with user-provided API key")
+            # Don't initialize pipeline here - we'll create it per request with user's API key
+            self.pipeline = None
+            logger.info("Pipeline configuration ready - will initialize per request with user API key")
             
             # Load prompts if custom prompt directory is provided
             prompt_dir = self.config.get('prompt_dir')
@@ -60,7 +52,7 @@ class LumaraPipeline:
                 self._load_prompts(prompt_dir)
                 
         except Exception as e:
-            logger.error(f"Failed to initialize pipeline: {str(e)}")
+            logger.error(f"Failed to setup pipeline configuration: {str(e)}")
             raise
     
     def _load_prompts(self, prompt_dir: str) -> None:
@@ -114,6 +106,18 @@ class LumaraPipeline:
             Dictionary containing the refined output and metadata
         """
         try:
+            # Get API key from config (user-provided) instead of environment
+            api_key = self.config.get('api_key')
+            if not api_key:
+                raise ValueError(
+                    "API key not found in configuration. "
+                    "Users must provide their own Google Gemini API key."
+                )
+            
+            # Initialize the Refinery pipeline with user's API key
+            self.pipeline = RefineryPipeline(api_key=api_key)
+            logger.info("Successfully initialized Refinery pipeline with user-provided API key")
+            
             # Run the Refinery pipeline with initial solution
             result = self.pipeline.run(
                 original_prompt=prompt,
