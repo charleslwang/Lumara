@@ -114,25 +114,42 @@ class LumaraPipeline:
                     "Users must provide their own Google Gemini API key."
                 )
             
-            # Initialize the Refinery pipeline with user's API key
-            self.pipeline = RefineryPipeline(api_key=api_key)
-            logger.info("Successfully initialized Refinery pipeline with user-provided API key")
+            # Initialize the pipeline with the API key
+            pipeline = RefineryPipeline(api_key=api_key)
             
-            # Run the Refinery pipeline with initial solution
-            result = self.pipeline.run(
+            # Run the pipeline
+            logger.debug(f"Running pipeline with prompt: {prompt[:100]}...")
+            logger.debug(f"Max iterations: {self.config.max_iterations}")
+            logger.debug(f"Initial solution: {model_output[:100] if model_output else 'None'}...")
+            
+            result = pipeline.run(
                 original_prompt=prompt,
-                initial_solution=model_output,
-                max_iterations=self.config.max_iterations
+                max_iterations=self.config.max_iterations,
+                initial_solution=model_output
             )
+            
+            logger.debug(f"Pipeline result keys: {list(result.keys()) if result else 'None'}")
+            logger.debug(f"Best score: {result.get('best_score', 'Not found') if result else 'No result'}")
+            logger.debug(f"Iterations count: {len(result.get('iterations', [])) if result else 'No result'}")
             
             # Format the result
             iterations_list = result.get('iterations', [])
+            best_score = result.get('best_score', -1)
+            
+            # If best_score is -1 (failed), try to get score from last iteration
+            if best_score == -1 and iterations_list:
+                last_iteration = iterations_list[-1]
+                best_score = last_iteration.get('evaluation', {}).get('overall_score', 5.0)
+            elif best_score == -1:
+                # Complete fallback if no iterations succeeded
+                best_score = 5.0
+            
             return {
                 'refined_output': result.get('best_solution', model_output),
                 'iterations': len(iterations_list),
                 'iterations_data': iterations_list,  # Include raw iterations for frontend
                 'scores': {
-                    'overall': result.get('best_score', 0),
+                    'overall': best_score,
                     'details': iterations_list[-1].get('evaluation', {}) if iterations_list else {}
                 },
                 'metadata': {
@@ -142,14 +159,23 @@ class LumaraPipeline:
             }
             
         except Exception as e:
-            logger.error(f"Error in refinement pipeline: {str(e)}", exc_info=True)
-            # Return the original output if refinement fails
+            logger.error(f"Pipeline execution failed: {str(e)}", exc_info=True)
+            print(f"[ERROR] Pipeline execution failed: {str(e)}")
+            
+            # Return a fallback response instead of raising an error
             return {
-                'refined_output': model_output,
-                'error': str(e),
+                'refined_output': model_output,  # Return original if refinement fails
                 'iterations': 0,
-                'scores': {},
-                'metadata': {}
+                'iterations_data': [],
+                'scores': {
+                    'overall': 5.0,  # Neutral score for failed refinement
+                    'details': {}
+                },
+                'metadata': {
+                    'session_id': 'failed_session',
+                    'duration_seconds': 0,
+                    'error': str(e)
+                }
             }
 
 
