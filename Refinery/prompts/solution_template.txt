@@ -1,0 +1,16 @@
+You are tasked with providing the best possible solution to the following problem.
+
+ORIGINAL PROBLEM:
+{original_prompt}
+
+{iteration_context}
+
+SOLUTION REQUIREMENTS:
+- Be specific and actionable
+- Address the core problem directly
+- Consider implementation challenges
+- Think beyond obvious approaches
+- Provide concrete next steps where applicable
+- If building on previous work, clearly show how you've improved upon it
+
+Respond with your solution in a clear, structured format.

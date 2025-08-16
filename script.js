@@ -105,8 +105,11 @@ document.addEventListener('DOMContentLoaded', () => {
     refineButton.disabled = true;
     
     try {
-      // Call the backend API
-      const response = await fetch('/api/refine', {
+      // Call the backend API using config
+      const BACKEND_URL = LUMARA_CONFIG.BACKEND_URL + LUMARA_CONFIG.ENDPOINTS.REFINE;
+      console.log('Calling backend:', BACKEND_URL);
+      
+      const response = await fetch(BACKEND_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -176,7 +179,28 @@ document.addEventListener('DOMContentLoaded', () => {
       resultsSection.scrollIntoView({ behavior: 'smooth' });
     } catch (error) {
       console.error('Error:', error);
-      alert('An error occurred during refinement. Please try again.');
+      
+      // More detailed error handling
+      let errorMessage = 'An error occurred during refinement. ';
+      
+      if (error.message.includes('API request failed')) {
+        errorMessage += 'The server returned an error. Please check if the backend is running and your API key is valid.';
+      } else if (error.message.includes('Failed to fetch')) {
+        errorMessage += 'Could not connect to the server. Please ensure the backend is running on localhost:5000.';
+      } else if (error.message.includes('API key')) {
+        errorMessage += 'Invalid API key. Please check your Google Gemini API key.';
+      } else {
+        errorMessage += `Details: ${error.message}`;
+      }
+      
+      // Show detailed error in console for debugging
+      console.error('Detailed error information:', {
+        message: error.message,
+        stack: error.stack,
+        timestamp: new Date().toISOString()
+      });
+      
+      alert(errorMessage);
     } finally {
       // Reset button state
       refineButton.innerHTML = 'Refine Output';

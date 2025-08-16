@@ -41,18 +41,18 @@ class LumaraPipeline:
     
     def _setup_pipeline(self) -> None:
         """Set up the Refinery pipeline with configuration."""
-        # Get API key from config or environment
-        api_key = self.config.get('api_key') or os.environ.get('GOOGLE_API_KEY')
+        # Get API key from config (user-provided) instead of environment
+        api_key = self.config.get('api_key')
         if not api_key:
             raise ValueError(
-                "API key not found. Please set GOOGLE_API_KEY environment variable "
-                "or provide it in the config as 'api_key'."
+                "API key not found in configuration. "
+                "Users must provide their own Google Gemini API key."
             )
         
         try:
-            # Initialize the Refinery pipeline
+            # Initialize the Refinery pipeline with user's API key
             self.pipeline = RefineryPipeline(api_key=api_key)
-            logger.info("Successfully initialized Refinery pipeline")
+            logger.info("Successfully initialized Refinery pipeline with user-provided API key")
             
             # Load prompts if custom prompt directory is provided
             prompt_dir = self.config.get('prompt_dir')

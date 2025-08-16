@@ -45,11 +45,10 @@ def refine():
                 'error': 'Missing required parameters: prompt, model_output, or api_key'
             }), 400
             
-        # Set API key in environment
-        os.environ['GOOGLE_API_KEY'] = api_key
-        
         # Create config with model override if needed
-        config = {}
+        config = {
+            'api_key': api_key  # Pass user's API key directly
+        }
         if model:
             # Map frontend model names to backend model names
             model_mapping = {
@@ -68,7 +67,7 @@ def refine():
         else:
             print("No model specified, using default model from config")
         
-        # Create a pipeline with the specified config
+        # Create a pipeline with the specified config (including user's API key)
         custom_pipeline = create_pipeline(config)
         
         # Run the refinement process
@@ -99,12 +98,40 @@ def refine():
         return jsonify(result)
         
     except Exception as e:
+        # Log the full error for debugging
+        import traceback
+        error_details = {
+            'error_type': type(e).__name__,
+            'error_message': str(e),
+            'traceback': traceback.format_exc(),
+            'request_data': {
+                'prompt_length': len(data.get('prompt', '')),
+                'model_output_length': len(data.get('model_output', '')),
+                'model': data.get('model'),
+                'has_api_key': bool(data.get('api_key'))
+            }
+        }
+        
+        print(f"Error in /api/refine endpoint: {error_details}")
+        
+        # Provide more specific error messages
+        error_message = str(e)
+        if 'API key' in error_message or 'authentication' in error_message.lower():
+            error_message = 'Invalid or missing API key. Please check your Google Gemini API key.'
+        elif 'quota' in error_message.lower() or 'limit' in error_message.lower():
+            error_message = 'API quota exceeded. Please check your API usage limits.'
+        elif 'network' in error_message.lower() or 'connection' in error_message.lower():
+            error_message = 'Network connection error. Please check your internet connection.'
+        elif 'Refinery' in error_message:
+            error_message = 'Refinery pipeline error. Please check if all dependencies are installed correctly.'
+        
         return jsonify({
-            'error': str(e),
+            'error': error_message,
             'refined_output': request.json.get('model_output', ''),
             'iterations': 0,
             'scores': {},
-            'metadata': {}
+            'metadata': {},
+            'debug_info': error_details if app.debug else None
         }), 500
 
 if __name__ == '__main__':

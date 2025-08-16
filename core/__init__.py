@@ -10,15 +10,14 @@ __version__ = "0.1.0"
 import sys
 from pathlib import Path
 
-# Find and add the Refinery module to the path
-refinery_path = Path(__file__).parent.parent.parent / 'Refinery' / 'src'
+# Use the local Refinery copy
+refinery_path = Path(__file__).parent.parent / 'Refinery' / 'src'
 if not refinery_path.exists():
     raise ImportError(
-        "Refinery source code not found at expected location. "
-        f"Expected path: {refinery_path}\n"
-        "Please ensure the Refinery repository is cloned at the correct location "
-        "or set the REFINERY_PATH environment variable to point to the Refinery src directory."
+        f"Refinery source code not found at: {refinery_path}\n"
+        "Please ensure the Refinery folder has been copied into the Lumara directory."
     )
+
 sys.path.append(str(refinery_path))
 
 # Import Refinery components

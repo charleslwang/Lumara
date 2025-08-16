@@ -1,0 +1,12 @@
+PREVIOUS ITERATION ANALYSIS:
+{previous_critique}
+
+IMPROVEMENT AREAS IDENTIFIED:
+{improvement_suggestions}
+
+Build upon the previous work while addressing the identified limitations. Your goal is to create a meaningfully better solution that incorporates the insights from the analysis above.
+
+PREVIOUS SOLUTION FOR REFERENCE:
+{previous_solution}
+
+This is iteration {iteration_number}. Push beyond incremental changes - strive for meaningful improvements that address the core gaps identified.
